@@ -46,7 +46,7 @@ func (bm *baseModel) CreateFields() {
 }
 
 func (bm *baseModel) SelectAll() []map[string]string {
-	xyDb.DService.SelectAll("")
+	xyDb.DService.Query("")
 	return nil
 }
 
