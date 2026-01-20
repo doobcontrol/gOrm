@@ -1,12 +1,12 @@
 package xyOrm
 
 //Define kModel
-type kModel struct{
+type KModel struct{
 	baseModel
 	FID string
 }
 
-func (km *kModel) CreateFields() {
+func (km *KModel) CreateFields() {
 	AssignFieldNames(km)
 	km.Fields = append(
 		km.Fields, 
