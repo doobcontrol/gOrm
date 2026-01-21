@@ -1,10 +1,14 @@
 package xyOrm
 
 import (
+	"fmt"
 	"reflect"
 	"github.com/doobcontrol/gDb/xyDb"
 	"slices"
+	"strings"
 )
+
+var xydb = xyDb.DService
 
 type TbField struct {
 	Name string
@@ -45,11 +49,47 @@ func (bm *baseModel) CreateFields() {
 
 }
 
-func (bm *baseModel) SelectAll() []map[string]string {
-	xyDb.DService.Query("")
-	return nil
+//query data
+func (bm *baseModel) SelectAll() ([]map[string]interface{}, error) {
+	sql := fmt.Sprintf(
+		"select * from %s", 
+		bm.Name)
+	return xydb.Query(sql)
 }
 
+//insert data
+func (bm *baseModel) Insert(recordMap map[string]string) error {
+	fieldsString,valuesString := MakeInsertStr(recordMap)
+	sql := fmt.Sprintf(
+		"insert into %s(%s) values(%s)", 
+		bm.Name, 
+		fieldsString, 
+		valuesString)
+
+	return xydb.ExSql(sql)
+}
+
+//update data
+
+//delete data
+
+//sql tool
+func MakeInsertStr(recordMap map[string]string) (string, string){
+	var fieldsBuilder strings.Builder
+	var valuesBuilder strings.Builder
+
+	for key, value := range recordMap {
+		if fieldsBuilder.Len() != 0{
+			fieldsBuilder.WriteString(",")
+			valuesBuilder.WriteString(",")
+		}
+		fieldsBuilder.WriteString(key)
+		valuesBuilder.WriteString("'")
+		valuesBuilder.WriteString(value)
+		valuesBuilder.WriteString("'")
+	}
+	return fieldsBuilder.String(), valuesBuilder.String()
+}
 
 // AssignFieldNames dynamically sets all exported string fields of a struct to their own names.
 var ExcludedFields = []string{"Name", "Fields"}
