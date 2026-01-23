@@ -8,10 +8,13 @@ type XyModel interface {
 	GetDbTable() xyDb.DbTable
 }
 
+func SetDbAccess(dbAccess xyDb.IDbAccess){
+	xyDb.DService.DbAccess = dbAccess
+}
+
 func InitModel(
-	dbAccess xyDb.IDbAccess, 
 	dbName string, 
-	initPars map[string]string,
+	initPars *map[string]string,
 	models []XyModel,
 	) (string, error) {
 	dbStructure := xyDb.DbStructure{
@@ -24,7 +27,6 @@ func InitModel(
 		dbStructure.Tables = append(dbStructure.Tables, tableStruc)
 	}
 
-	xyDb.DService.DbAccess = dbAccess
 	connectString, err := xyDb.DService.Init(initPars, dbStructure)
 	if err != nil {
 		return "", err
@@ -34,10 +36,8 @@ func InitModel(
 }
 
 func ConfigModel(
-	dbAccess xyDb.IDbAccess,
 	dbConnectString string,
 	) error {
-		xyDb.DService.DbAccess = dbAccess
 		xyDb.DService.Set(dbConnectString)
 		return nil
 }
