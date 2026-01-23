@@ -50,12 +50,19 @@ func (bm *baseModel) CreateFields() {
 }
 
 //query data
-func (bm *baseModel) SelectAll() ([]map[string]interface{}, error) {
+func (bm *baseModel) SelectAll() (*[]map[string]interface{}, error) {
 	sql := fmt.Sprintf(
 		"select * from %s", 
 		bm.Name)
 	return xydb.Query(sql)
 }
+func (bm *baseModel) SelectByField(field string, value string) (*[]map[string]interface{}, error) {
+	sql := fmt.Sprintf(
+		"select * from %s where %s='%s'", 
+		bm.Name, field, value)
+	return xydb.Query(sql)
+}
+
 
 //insert data
 func (bm *baseModel) Insert(recordMap map[string]string) error {

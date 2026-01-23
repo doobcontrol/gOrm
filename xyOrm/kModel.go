@@ -1,5 +1,7 @@
 package xyOrm
 
+import "errors"
+
 //Define kModel
 type KModel struct{
 	baseModel
@@ -16,4 +18,17 @@ func (km *KModel) CreateFields() {
 			Length: 50,
 			IsKey: true,
 		})
+}
+
+//query data
+func (km *KModel) SelectByPk(value string) (*map[string]interface{}, error) {
+	var rList *[]map[string]interface{}
+	var err error
+	if rList, err = km.baseModel.SelectByField(km.FID, value); err != nil {
+		return nil, err
+	}
+	if len((*rList)) < 1{
+		return nil, errors.New("No record found")
+	}
+	return &(*rList)[0], nil
 }
