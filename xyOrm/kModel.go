@@ -32,3 +32,13 @@ func (km *KModel) SelectByPk(value string) (*map[string]interface{}, error) {
 	}
 	return &(*rList)[0], nil
 }
+
+//update data
+func (km *KModel) UpdateByByPk(recordMap map[string]string, value string) error {
+	return km.baseModel.UpdateByField(recordMap, km.FID, value)
+}
+
+//delete data
+func (km *KModel) DeleteByByPk(value string) error {
+	return km.baseModel.DeleteByField(km.FID, value)
+}

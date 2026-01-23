@@ -77,11 +77,31 @@ func (bm *baseModel) Insert(recordMap map[string]string) error {
 }
 
 //update data
+func (bm *baseModel) UpdateByField(recordMap map[string]string, field string, value string) error {
+	setString  := MakeUpdateStr(recordMap)
+	sql := fmt.Sprintf(
+		"update %s set %s where %s='%s'", 
+		bm.Name, 
+		setString,
+		field, 
+		value)
+
+	return xydb.ExSql(sql)
+}
 
 //delete data
+func (bm *baseModel) DeleteByField(field string, value string) error {
+	sql := fmt.Sprintf(
+		"delete from %s where %s='%s'", 
+		bm.Name, 
+		field, 
+		value)
+
+	return xydb.ExSql(sql)
+}
 
 //sql tool
-func MakeInsertStr(recordMap map[string]string) (string, string){
+func MakeInsertStr(recordMap map[string]string) (string, string) {
 	var fieldsBuilder strings.Builder
 	var valuesBuilder strings.Builder
 
@@ -96,6 +116,17 @@ func MakeInsertStr(recordMap map[string]string) (string, string){
 		valuesBuilder.WriteString("'")
 	}
 	return fieldsBuilder.String(), valuesBuilder.String()
+}
+func MakeUpdateStr(recordMap map[string]string) string {
+	var setsBuilder strings.Builder
+
+	for key, value := range recordMap {
+		if setsBuilder.Len() != 0{
+			setsBuilder.WriteString(",")
+		}
+		setsBuilder.WriteString(fmt.Sprintf("%s='%s'", key, value))
+	}
+	return setsBuilder.String()
 }
 
 // AssignFieldNames dynamically sets all exported string fields of a struct to their own names.
