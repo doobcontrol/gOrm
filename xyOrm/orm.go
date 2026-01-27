@@ -1,6 +1,8 @@
 package xyOrm
 
 import (
+	"errors"
+
 	"github.com/doobcontrol/gDb/xyDb"
 )
 
@@ -17,6 +19,20 @@ func InitModel(
 	initPars *map[string]string,
 	models []XyModel,
 	) (string, error) {
+	if 	dbName == "" {
+		return "", errors.New("dbName is null")
+	}
+	if 	initPars == nil {
+		return "", errors.New("initPars must not be nil")
+	}
+	if 	models == nil {
+		return "", errors.New("models must not be nil")
+	} else {
+		if 	len(models) == 0 {
+			return "", errors.New("no models")
+		}
+	}
+
 	dbStructure := xyDb.DbStructure{
 		DbName: dbName,
 		Tables: []xyDb.DbTable{},
