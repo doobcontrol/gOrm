@@ -49,6 +49,34 @@ func TestConfigModel(t *testing.T) {
 
 	cleanDb()
 }
+func TestClean(t *testing.T) {
+	cleanDb()
+
+	setTest()
+
+	connectString, _ := InitModel(
+		testDFile,
+		&map[string]string{xyDbSqlite.S_dbFile: testDFile}, 
+		[]XyModel{GetUser()})
+	xyDb.DService.DbAccess.Close()
+
+	if err := ConfigModel(connectString); err != nil {
+		t.Errorf("TestClean ConfigModel error: %s", err.Error())
+	} else {
+		Clean()
+		_, err = GetUser().SelectAll()
+		if _, err := GetUser().SelectAll(); err == nil {
+			t.Errorf("TestClean after clean, select expect an error, but got nil")
+		} else {
+			if err.Error() != "sql: database is closed" {
+				t.Errorf("TestClean after clean, select expect an error: %s, but got: %s",
+				"sql: database is closed", err.Error())
+			}
+		}
+	}
+
+	cleanDb()
+}
 
 var testDFile = "./testDb"
 func cleanDb(){

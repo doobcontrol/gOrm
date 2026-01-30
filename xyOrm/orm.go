@@ -57,3 +57,7 @@ func ConfigModel(
 		xyDb.DService.Set(dbConnectString)
 		return nil
 }
+
+func Clean() error {
+	return xyDb.DService.DbAccess.Close()
+}
