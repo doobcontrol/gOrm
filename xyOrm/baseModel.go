@@ -46,7 +46,7 @@ func (bm *baseModel) GetDbTable() xyDb.DbTable {
 }
 
 func (bm *baseModel) CreateFields() {
-
+	bm.FieldNamesSetted = true
 }
 
 //query data
@@ -103,6 +103,10 @@ func (bm *baseModel) DeleteByField(field string, value string) error {
 // AssignFieldNames dynamically sets all exported string fields of a struct to their own names.
 var ExcludedFields = []string{"Name", "Fields"}
 func (bm *baseModel) AssignFieldNames(s interface{}) error {
+	if bm.FieldNamesSetted {
+		return nil
+	}
+	
 	// Get the reflect.Value of the interface.
 	// We need a pointer to the struct to modify it, so use reflect.ValueOf(&s).Elem()
 	// or ensure the input 's' is already a pointer and use reflect.ValueOf(s).Elem().
