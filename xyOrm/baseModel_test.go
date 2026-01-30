@@ -6,27 +6,6 @@ import (
 	"github.com/doobcontrol/gDbSqlite/xyDbSqlite"
 )
 
-func TestAssignFieldNames(t *testing.T) {
-	type testStruct struct {
-		F1 string
-		F2 string
-		F3 string
-		Name string
-		Fields string
-	}
-	tS := testStruct{}
-
-	AssignFieldNames(&tS)
-	if tS.F1 != "F1" || tS.F2 != "F2" || tS.F3 != "F3" {
-		t.Errorf("TestAssignFieldNames expect tS.F1 tS.F2 tS.F3 values as: %s %s %s, but got: %s %s %s", 
-		"F1", "F2", "F3", tS.F1, tS.F2, tS.F3)
-	}
-	if tS.Name == "Name" || tS.Fields == "Fields" {
-		t.Errorf("TestAssignFieldNames expect tS.Name tS.Fields excluded, but still got: %s %s", 
-		tS.Name, tS.Fields)
-	}
-}
-
 func TestMakeInsertStr(t *testing.T) {
 	recordMap := map[string]string{
 		"a":"1",
@@ -51,6 +30,27 @@ func TestMakeUpdateStr(t *testing.T) {
 	updateString := MakeUpdateStr(recordMap)
 	if updateString != "a='1',b='2'" {
 		t.Errorf("TestMakeUpdateStr expect updateString: %s, but got: %s", "a='1',b='2'", updateString)
+	}
+}
+func TestBaseModelAssignFieldNames(t *testing.T) {
+	type testModel struct{
+		baseModel
+		FID string
+	}
+
+	tModel := &testModel{}
+
+	if err := tModel.AssignFieldNames(tModel); err != nil {
+		t.Errorf("TestBaseModelAssignFieldNames error: %s", err)
+	} else {
+		if tModel.FID != "FID" {
+			t.Errorf("TestBaseModelAssignFieldNames expect tModel.FID value as: %s, but got: %s", 
+			"F1", tModel.FID)
+		}
+		if tModel.Name == "Name" {
+			t.Errorf("TestBaseModelAssignFieldNames expect tModel.Name excluded, but still got: %s", 
+			tModel.Name)
+		}
 	}
 }
 

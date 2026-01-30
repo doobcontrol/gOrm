@@ -100,38 +100,9 @@ func (bm *baseModel) DeleteByField(field string, value string) error {
 	return xydb.ExSql(sql)
 }
 
-//sql tool
-func MakeInsertStr(recordMap map[string]string) (string, string) {
-	var fieldsBuilder strings.Builder
-	var valuesBuilder strings.Builder
-
-	for key, value := range recordMap {
-		if fieldsBuilder.Len() != 0{
-			fieldsBuilder.WriteString(",")
-			valuesBuilder.WriteString(",")
-		}
-		fieldsBuilder.WriteString(key)
-		valuesBuilder.WriteString("'")
-		valuesBuilder.WriteString(value)
-		valuesBuilder.WriteString("'")
-	}
-	return fieldsBuilder.String(), valuesBuilder.String()
-}
-func MakeUpdateStr(recordMap map[string]string) string {
-	var setsBuilder strings.Builder
-
-	for key, value := range recordMap {
-		if setsBuilder.Len() != 0{
-			setsBuilder.WriteString(",")
-		}
-		setsBuilder.WriteString(fmt.Sprintf("%s='%s'", key, value))
-	}
-	return setsBuilder.String()
-}
-
 // AssignFieldNames dynamically sets all exported string fields of a struct to their own names.
 var ExcludedFields = []string{"Name", "Fields"}
-func AssignFieldNames(s interface{}) error {
+func (bm *baseModel) AssignFieldNames(s interface{}) error {
 	// Get the reflect.Value of the interface.
 	// We need a pointer to the struct to modify it, so use reflect.ValueOf(&s).Elem()
 	// or ensure the input 's' is already a pointer and use reflect.ValueOf(s).Elem().
@@ -166,4 +137,33 @@ func AssignFieldNames(s interface{}) error {
 	}
 
 	return nil
+}
+
+//sql tool
+func MakeInsertStr(recordMap map[string]string) (string, string) {
+	var fieldsBuilder strings.Builder
+	var valuesBuilder strings.Builder
+
+	for key, value := range recordMap {
+		if fieldsBuilder.Len() != 0{
+			fieldsBuilder.WriteString(",")
+			valuesBuilder.WriteString(",")
+		}
+		fieldsBuilder.WriteString(key)
+		valuesBuilder.WriteString("'")
+		valuesBuilder.WriteString(value)
+		valuesBuilder.WriteString("'")
+	}
+	return fieldsBuilder.String(), valuesBuilder.String()
+}
+func MakeUpdateStr(recordMap map[string]string) string {
+	var setsBuilder strings.Builder
+
+	for key, value := range recordMap {
+		if setsBuilder.Len() != 0{
+			setsBuilder.WriteString(",")
+		}
+		setsBuilder.WriteString(fmt.Sprintf("%s='%s'", key, value))
+	}
+	return setsBuilder.String()
 }

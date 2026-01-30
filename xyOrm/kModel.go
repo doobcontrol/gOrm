@@ -9,7 +9,7 @@ type KModel struct{
 }
 
 func (km *KModel) CreateFields() {
-	AssignFieldNames(km)
+	km.AssignFieldNames(km)
 	km.Fields = append(
 		km.Fields, 
 		TbField{

@@ -94,7 +94,7 @@ func NewUser() *User {
 
 	newUser.RealModel = true
 	newUser.Name = reflect.ValueOf(newUser).Type().Name()
-	AssignFieldNames(&newUser)
+	newUser.AssignFieldNames(&newUser)
 	newUser.CreateFields()
 
 	return &newUser

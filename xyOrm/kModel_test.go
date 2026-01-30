@@ -10,7 +10,7 @@ func TestKModelCreateFields(t *testing.T) {
 
 	newUser.RealModel = true
 	newUser.Name = reflect.ValueOf(newUser).Type().Name()
-	AssignFieldNames(&newUser)
+	newUser.AssignFieldNames(newUser)
 
 	testModel := newUser.KModel
 	testModel.CreateFields()
